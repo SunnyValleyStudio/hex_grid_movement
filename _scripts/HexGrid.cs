@@ -14,12 +14,7 @@ public class HexGrid : MonoBehaviour
             hexTileDict[hex.HexCoords] = hex;
         }
 
-        List<Vector3Int> neighbours = GetNeighboursFor(new Vector3Int(0, 0, 0));
-        Debug.Log("Neighbours for (0,0,0) are:");
-        foreach (Vector3Int neighbourPos in neighbours)
-        {
-            Debug.Log(neighbourPos);
-        }
+        
     }
 
     public Hex GetTileAt(Vector3Int hexCoordinates)
