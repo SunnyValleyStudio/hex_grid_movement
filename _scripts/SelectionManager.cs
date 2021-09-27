@@ -34,7 +34,9 @@ public class SelectionManager : MonoBehaviour
                 hexGrid.GetTileAt(neighbour).DisableHighlight();
             }
 
-            neighbours = hexGrid.GetNeighboursFor(selectedHex.HexCoords);
+            //neighbours = hexGrid.GetNeighboursFor(selectedHex.HexCoords);
+            BFSResult bfsResult = GraphSearch.BFSGetRange(hexGrid, selectedHex.HexCoords, 20);
+            neighbours = new List<Vector3Int>(bfsResult.GetRangePositions());
 
             foreach (Vector3Int neighbour in neighbours)
             {

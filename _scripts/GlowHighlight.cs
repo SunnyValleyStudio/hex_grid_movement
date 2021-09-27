@@ -36,6 +36,7 @@ public class GlowHighlight : MonoBehaviour
                     mat = new Material(glowMaterial);
                     //By default, Unity considers a color with the property name name "_Color" to be the main color
                     mat.color = originalMaterials[i].color;
+                    cachedGlowMaterials[mat.color] = mat;
                 }
                 newMaterials[i] = mat;
             }
