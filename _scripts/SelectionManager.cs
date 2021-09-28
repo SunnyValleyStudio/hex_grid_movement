@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SelectionManager : MonoBehaviour
 {
@@ -10,9 +11,9 @@ public class SelectionManager : MonoBehaviour
 
     public LayerMask selectionMask;
 
-    public HexGrid hexGrid;
 
-    List<Vector3Int> neighbours = new List<Vector3Int>();
+    public UnityEvent<GameObject> OnUnitSelected;
+    public UnityEvent<GameObject> TerrainSelected;
 
     private void Awake()
     {
@@ -25,30 +26,20 @@ public class SelectionManager : MonoBehaviour
         GameObject result;
         if (FindTarget(mousePosition, out result))
         {
-            Hex selectedHex = result.GetComponent<Hex>();
-
-            selectedHex.DisableHighlight();
-
-            foreach (Vector3Int neighbour in neighbours)
+            if (UnitSelected(result))
             {
-                hexGrid.GetTileAt(neighbour).DisableHighlight();
+                OnUnitSelected?.Invoke(result);
             }
-
-            //neighbours = hexGrid.GetNeighboursFor(selectedHex.HexCoords);
-            BFSResult bfsResult = GraphSearch.BFSGetRange(hexGrid, selectedHex.HexCoords, 20);
-            neighbours = new List<Vector3Int>(bfsResult.GetRangePositions());
-
-            foreach (Vector3Int neighbour in neighbours)
+            else
             {
-                hexGrid.GetTileAt(neighbour).EnableHighlight();
-            }
-
-            Debug.Log($"Neighbours for {selectedHex.HexCoords} are:");
-            foreach (Vector3Int neighbourPos in neighbours)
-            {
-                Debug.Log(neighbourPos);
+                TerrainSelected?.Invoke(result);
             }
         }
+    }
+
+    private bool UnitSelected(GameObject result)
+    {
+        return result.GetComponent<Unit>() != null;
     }
 
     private bool FindTarget(Vector3 mousePosition, out GameObject result)
